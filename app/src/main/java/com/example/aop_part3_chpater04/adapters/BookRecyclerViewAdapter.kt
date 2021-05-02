@@ -5,15 +5,26 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.aop_part3_chpater04.databinding.ItemBookBinding
 import com.example.aop_part3_chpater04.model.Book
 
 
-class BookRecyclerViewAdapter : ListAdapter<Book, BookRecyclerViewAdapter.BookItemViewHolder>(diffUtil) {
+class BookRecyclerViewAdapter(private val itemClickedListener: (Book) -> Unit) : ListAdapter<Book, BookRecyclerViewAdapter.BookItemViewHolder>(diffUtil) {
 
     inner class BookItemViewHolder(private val binding: ItemBookBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(bookModel : Book) {
+        fun bind(bookModel: Book) {
             binding.titleTextView.text = bookModel.title
+            binding.descriptionTextView.text = bookModel.description
+
+            binding.root.setOnClickListener {
+                itemClickedListener(bookModel)
+            }
+
+            Glide
+                .with(binding.coverImageView)
+                .load(bookModel.coverSmallUrl)
+                .into(binding.coverImageView)
         }
     }
 
